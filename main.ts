@@ -1,25 +1,27 @@
 input.onButtonPressed(Button.A, function () {
-    brightness += 10
-    strip.setBrightness(brightness)
-    strip.showColor(neopixel.colors(NeoPixelColors.Red))
-    strip.show()
+    start = 1
 })
-input.onButtonPressed(Button.AB, function () {
-    strip.showColor(neopixel.colors(NeoPixelColors.Red))
-    strip.show()
-    basic.showString("R")
-    basic.pause(2000)
-    basic.clearScreen()
-})
+function test (num: number) {
+    range = strip.range(num, 1)
+    range.setBrightness(255 / (8 - num))
+    range.showColor(neopixel.hsl(275, 100, 10 + num * 6))
+    range.show()
+}
 input.onButtonPressed(Button.B, function () {
-    brightness += -10
-    strip.setBrightness(brightness)
-    strip.showColor(neopixel.colors(NeoPixelColors.Red))
-    strip.show()
+    start = 0
 })
-let brightness = 0
+let range: neopixel.Strip = null
+let start = 0
 let strip: neopixel.Strip = null
-strip = neopixel.create(DigitalPin.P0, 10, NeoPixelMode.RGB)
-strip.showColor(neopixel.colors(NeoPixelColors.Red))
-brightness = 255
-strip.show()
+strip = neopixel.create(DigitalPin.P0, 32, NeoPixelMode.RGB)
+for (let index = 0; index <= 7; index++) {
+    test(index)
+}
+start = 0
+basic.forever(function () {
+    if (start == 1) {
+        strip.rotate(1)
+        strip.show()
+        basic.pause(20)
+    }
+})
